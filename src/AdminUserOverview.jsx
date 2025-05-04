@@ -6,6 +6,9 @@ export default function AdminUserOverview() {
   const [selected, setSelected] = useState('')
   const [records, setRecords] = useState([])
   const [summary, setSummary] = useState(null)
+  const [payoutAmount, setPayoutAmount] = useState('')
+  const [payoutNote, setPayoutNote] = useState('')
+  const [payoutMessage, setPayoutMessage] = useState('')
 
   useEffect(() => {
     const loadUsers = async () => {
@@ -66,6 +69,73 @@ export default function AdminUserOverview() {
     loadRecords()
   }, [selected])
 
+  const handlePayoutSubmit = async (e) => {
+    e.preventDefault()
+    setPayoutMessage('')
+
+    const amount = Number(payoutAmount)
+    if (!amount || amount <= 0) {
+      setPayoutMessage('Zadej platnou částku.')
+      return
+    }
+
+    const { error } = await supabase
+      .from('earnings')
+      .insert([{
+        user_name: selected,
+        type: 'vyplata',
+        amount,
+        note: payoutNote,
+        deleted: false
+      }])
+
+    if (error) {
+      setPayoutMessage('Chyba při ukládání výplaty.')
+      return
+    }
+
+    setPayoutMessage('Výplata byla uložena.')
+    setPayoutAmount('')
+    setPayoutNote('')
+
+    // Aktualizuj záznamy po uložení
+    const { data, error: reloadError } = await supabase
+      .from('earnings')
+      .select('*')
+      .eq('user_name', selected)
+      .eq('deleted', false)
+      .order('created_at', { ascending: false })
+
+    if (!reloadError) {
+      setRecords(data)
+      let hotovost = 0
+      let hodnota = 0
+      let vyplaceno = 0
+
+      const activityValues = {
+        hra: 600,
+        lastminute: 700,
+        noshow: 200,
+        uklid: (h) => h * 50,
+        bonus: 1000,
+        jine: 0
+      }
+
+      for (const e of data) {
+        if (e.payment === 'hotove') hotovost += Number(e.amount || 0)
+        if (e.type === 'vyplata') vyplaceno += Number(e.amount || 0)
+        if (e.type === 'uklid') hodnota += activityValues.uklid(e.hours || 0)
+        else if (e.type !== 'jine') hodnota += activityValues[e.type] || 0
+      }
+
+      setSummary({
+        hotovost,
+        hodnota,
+        vyplaceno
+      })
+    }
+  }
+
   return (
     <div className="flex flex-col items-center justify-center w-full px-2">
       <div className="colorful-form mb-8">
@@ -94,6 +164,25 @@ export default function AdminUserOverview() {
                 <div style={{color:'#ff1744', fontWeight:'bold'}}>🔔 POZOR: Dlužíte brigádníkovi více než 4000 Kč!</div>
               )}
             </div>
+            <form onSubmit={handlePayoutSubmit}>
+              <label>Zadat výplatu:</label>
+              <input
+                type="number"
+                placeholder="Částka k výplatě"
+                value={payoutAmount}
+                onChange={(e) => setPayoutAmount(e.target.value)}
+                className="mb-2"
+              />
+              <input
+                type="text"
+                placeholder="Poznámka (nepovinné)"
+                value={payoutNote}
+                onChange={(e) => setPayoutNote(e.target.value)}
+                className="mb-2"
+              />
+              <button type="submit" className="btn">Vyplatit</button>
+              {payoutMessage && <p className="text-sm mt-1">{payoutMessage}</p>}
+            </form>
           </div>
         )}
       </div>
