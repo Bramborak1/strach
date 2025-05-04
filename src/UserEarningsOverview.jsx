@@ -14,7 +14,12 @@ export default function UserEarningsOverview({ user }) {
       .order('created_at', { ascending: false })
 
     if (!error) {
-      setRecords(data)
+      // Filtrovat pouze záznamy mladší než 14 dní
+      const fourteenDaysAgo = new Date()
+      fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14)
+      const recentRecords = data.filter(r => new Date(r.created_at) >= fourteenDaysAgo)
+
+      setRecords(recentRecords)
 
       let hotovost = 0
       let hodnota = 0
@@ -27,7 +32,7 @@ export default function UserEarningsOverview({ user }) {
         jine: 0
       }
 
-      for (const e of data) {
+      for (const e of recentRecords) {
         if (e.payment === 'hotove') hotovost += Number(e.amount || 0)
         if (e.type === 'uklid') hodnota += activityValues.uklid(e.hours || 0)
         else if (e.type !== 'jine') hodnota += activityValues[e.type] || 0
@@ -53,10 +58,18 @@ export default function UserEarningsOverview({ user }) {
         <div className="colorful-summary">
           <div className="summary-label">💵 Obdržená hotovost:</div>
           <div className="summary-value">{summary.hotovost} Kč</div>
-          <div className="summary-label" style={{marginTop: '0.7rem'}}>💼 Hodnota práce:</div>
+          <div className="summary-label" style={{ marginTop: '0.7rem' }}>💼 Hodnota práce:</div>
           <div className="summary-value">{summary.hodnota} Kč</div>
-          <div className={`summary-diff ${summary.rozdil > 0 ? 'positive' : summary.rozdil < 0 ? 'negative' : 'zero'}`}
-               style={{marginTop: '1.1rem'}}>
+          <div
+            className={`summary-diff ${
+              summary.rozdil > 0
+                ? 'positive'
+                : summary.rozdil < 0
+                ? 'negative'
+                : 'zero'
+            }`}
+            style={{ marginTop: '1.1rem' }}
+          >
             {summary.rozdil > 0
               ? `Máš vrátit: ${summary.rozdil} Kč`
               : summary.rozdil < 0
@@ -67,18 +80,25 @@ export default function UserEarningsOverview({ user }) {
       )}
 
       <div className="w-full">
-        <h4 className="text-xl font-semibold mb-4 text-white">Historie záznamů</h4>
+        <h4 className="text-xl font-semibold mb-4 text-white">Historie záznamů (posledních 14 dní)</h4>
         <ul>
-          {records.map(r => (
+          {records.map((r) => (
             <li
               key={r.id}
               className={`colorful-record ${
-                r.type === 'vyplata' ? 'payout' :
-                r.type === 'bonus' ? 'bonus' :
-                r.type === 'uklid' ? 'uklid' :
-                r.type === 'noshow' ? 'noshow' :
-                r.type === 'lastminute' ? 'lastminute' :
-                r.type === 'hra' ? 'hra' : ''
+                r.type === 'vyplata'
+                  ? 'payout'
+                  : r.type === 'bonus'
+                  ? 'bonus'
+                  : r.type === 'uklid'
+                  ? 'uklid'
+                  : r.type === 'noshow'
+                  ? 'noshow'
+                  : r.type === 'lastminute'
+                  ? 'lastminute'
+                  : r.type === 'hra'
+                  ? 'hra'
+                  : ''
               }`}
             >
               <span className="record-date">{new Date(r.created_at).toLocaleString()}</span>
