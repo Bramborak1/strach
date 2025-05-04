@@ -82,8 +82,9 @@ export default function EarningsForm({ user }) {
             >
               <option value="kartou">Kartou</option>
               <option value="hotove">Hotově</option>
-              <option value="qr">QR</option>
               <option value="voucher">Voucher</option>
+              <option value="qr">QR</option>
+              
             </select>
           </>
         )}
