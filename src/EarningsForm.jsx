@@ -59,7 +59,6 @@ export default function EarningsForm({ user }) {
           <option value="lastminute">Last minute hra (700 Kč)</option>
           <option value="noshow">No-show (200 Kč)</option>
           <option value="uklid">Úklid / praní plášťů (50 Kč/hod)</option>
-          <option value="bonus">Bonus po 10 hrách (1000 Kč)</option>
           <option value="jine">Jiné (jednorázová odměna)</option>
         </select>
 
@@ -84,6 +83,7 @@ export default function EarningsForm({ user }) {
               <option value="kartou">Kartou</option>
               <option value="hotove">Hotově</option>
               <option value="qr">QR</option>
+              <option value="voucher">Voucher</option>
             </select>
           </>
         )}
