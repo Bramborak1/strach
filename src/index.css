@@ -1,0 +1,258 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: black;
+  color: white;
+}
+
+/* Moderní barevný formulář */
+.colorful-form {
+  background: linear-gradient(135deg, #232526 0%, #414345 100%);
+  border-radius: 1.2rem;
+  box-shadow: 0 4px 32px 0 rgba(0,0,0,0.25);
+  padding: 2rem 2.5rem;
+  max-width: 340px;
+  margin: 0 auto;
+  border: 2px solid #ff4d4f;
+}
+
+.colorful-form h3 {
+  color: #ff4d4f;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.colorful-form label {
+  color: #ffd700;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+  display: block;
+}
+
+.colorful-form input,
+.colorful-form select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 2px solid #ffb347;
+  background: #232526;
+  color: #fff;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.colorful-form input:focus,
+.colorful-form select:focus {
+  border-color: #ff4d4f;
+  box-shadow: 0 0 0 2px #ffb34744;
+}
+
+.colorful-form button {
+  width: 100%;
+  background: linear-gradient(90deg, #ff4d4f 0%, #ffb347 100%);
+  color: #fff;
+  font-weight: 700;
+  padding: 0.7rem 0;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.colorful-form button:hover {
+  background: linear-gradient(90deg, #ffb347 0%, #ff4d4f 100%);
+  transform: translateY(-2px) scale(1.03);
+}
+
+.colorful-form .form-message {
+  text-align: center;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+}
+
+.colorful-form .form-message.success {
+  color: #00e676;
+}
+
+.colorful-form .form-message.error {
+  color: #ff1744;
+}
+
+/* Styl pro barevné záznamy */
+.colorful-record {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  background: linear-gradient(90deg, #232526 60%, #2c5364 100%);
+  border-left: 6px solid #ffb347;
+  border-radius: 0.7rem;
+  padding: 0.7rem 1rem;
+  margin-bottom: 0.7rem;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10);
+  font-size: 1.02rem;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+.colorful-record .record-date {
+  color: #ffd700;
+  font-weight: 600;
+  min-width: 120px;
+  font-size: 0.98rem;
+}
+.colorful-record .record-type {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #ff4d4f;
+}
+.colorful-record .record-amount {
+  font-weight: 700;
+  color: #00e676;
+}
+.colorful-record .record-payment {
+  color: #ffb347;
+  font-size: 0.95rem;
+}
+.colorful-record .record-note {
+  color: #bdbdbd;
+  font-size: 0.95rem;
+}
+.colorful-record.payout {
+  border-left-color: #00e676;
+  background: linear-gradient(90deg, #1b5e20 60%, #232526 100%);
+}
+.colorful-record.bonus {
+  border-left-color: #ffd700;
+  background: linear-gradient(90deg, #ffd700 10%, #232526 100%);
+}
+.colorful-record.uklid {
+  border-left-color: #2196f3;
+}
+.colorful-record.noshow {
+  border-left-color: #ff1744;
+}
+.colorful-record.lastminute {
+  border-left-color: #ffb347;
+}
+.colorful-record.hra {
+  border-left-color: #ff4d4f;
+}
+
+/* Moderní navigační bar */
+.navbar {
+  width: 100%;
+  background: linear-gradient(90deg, #232526 0%, #ff4d4f 100%);
+  border-radius: 1.2rem;
+  box-shadow: 0 4px 24px 0 rgba(0,0,0,0.18);
+  padding: 0.2rem 1.5rem;
+  margin: 1.0rem auto 2.5rem auto;
+  display: flex;
+  justify-content: center;
+  gap: 0.2rem;
+  max-width: 900px;
+}
+
+.navbar-btn,
+.navbar-btn.active {
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+  line-height: 1.5;
+}
+
+.navbar-btn {
+  background: linear-gradient(90deg, #ffb347 0%, #ff4d4f 100%);
+  color: #fff;
+  font-weight: 700;
+  padding: 0.1rem 0.3rem;
+  border: 2px solid #181818;
+  border-radius: 0.4rem;
+  font-size: 1.08rem;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10);
+  cursor: pointer;
+  transition: background 0.18s, transform 0.12s, box-shadow 0.18s, border-color 0.18s;
+}
+
+.navbar-btn.active, .navbar-btn:hover {
+  background: linear-gradient(90deg, #ff4d4f 0%, #ffb347 100%);
+  color: #fff;
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 4px 16px 0 rgba(255,77,79,0.18);
+  border-color: #232526;
+}
+
+.login-box {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  background: #181818cc;
+  border-radius: 0.7rem;
+  padding: 0.4rem 1.1rem 0.4rem 1.1rem;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #ffd700;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.10);
+}
+.login-box strong {
+  color: #fff;
+  font-weight: 700;
+}
+.logout-btn {
+  background: linear-gradient(90deg, #232526 0%, #ff4d4f 100%);
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.35rem 1rem;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  transition: background 0.18s, transform 0.12s;
+}
+.logout-btn:hover {
+  background: linear-gradient(90deg, #ff4d4f 0%, #232526 100%);
+  transform: translateY(-1px) scale(1.04);
+}
+
+.colorful-summary {
+  background: linear-gradient(90deg, #232526 60%, #414345 100%);
+  border-radius: 1.1rem;
+  box-shadow: 0 2px 16px 0 rgba(0,0,0,0.18);
+  padding: 1.3rem 1.7rem 1.3rem 1.7rem;
+  margin: 0 auto 2rem auto;
+  max-width: 340px;
+  text-align: center;
+  border: 2px solid #ffb347;
+}
+.colorful-summary .summary-label {
+  color: #ffd700;
+  font-weight: 600;
+  font-size: 1.08rem;
+}
+.colorful-summary .summary-value {
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.13rem;
+}
+.colorful-summary .summary-diff {
+  font-weight: 700;
+  font-size: 1.13rem;
+  margin-top: 0.7rem;
+}
+.colorful-summary .summary-diff.positive {
+  color: #ff4d4f;
+}
+.colorful-summary .summary-diff.negative {
+  color: #00e676;
+}
+.colorful-summary .summary-diff.zero {
+  color: #ffd700;
+}
