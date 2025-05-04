@@ -29,11 +29,15 @@ export default function AdminUserOverview() {
     if (!selected) return
 
     const loadRecords = async () => {
+      const twoWeeksAgo = new Date()
+      twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14)
+
       const { data, error } = await supabase
         .from('earnings')
         .select('*')
         .eq('user_name', selected)
         .eq('deleted', false)
+        .gte('created_at', twoWeeksAgo.toISOString())
         .order('created_at', { ascending: false })
 
       if (!error) {
@@ -98,12 +102,15 @@ export default function AdminUserOverview() {
     setPayoutAmount('')
     setPayoutNote('')
 
-    // Aktualizuj záznamy po uložení
+    const twoWeeksAgo = new Date()
+    twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14)
+
     const { data, error: reloadError } = await supabase
       .from('earnings')
       .select('*')
       .eq('user_name', selected)
       .eq('deleted', false)
+      .gte('created_at', twoWeeksAgo.toISOString())
       .order('created_at', { ascending: false })
 
     if (!reloadError) {
@@ -188,7 +195,7 @@ export default function AdminUserOverview() {
       </div>
       {selected && (
         <div className="w-full max-w-2xl bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
-          <h4 className="text-xl font-semibold mb-4 text-white">Záznamy</h4>
+          <h4 className="text-xl font-semibold mb-4 text-white">Záznamy za posledních 14 dní</h4>
           <ul>
             {records.map((r) => (
               <li
