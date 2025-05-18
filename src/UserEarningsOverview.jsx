@@ -14,7 +14,6 @@ export default function UserEarningsOverview({ user }) {
       .order('created_at', { ascending: false })
 
     if (!error) {
-      // Filtrovat pouze záznamy mladší než 14 dní
       const fourteenDaysAgo = new Date()
       fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14)
       const recentRecords = data.filter(r => new Date(r.created_at) >= fourteenDaysAgo)
@@ -23,25 +22,37 @@ export default function UserEarningsOverview({ user }) {
 
       let hotovost = 0
       let hodnota = 0
+      let vyplaceno = 0
+
       const activityValues = {
         hra: 600,
         lastminute: 700,
         noshow: 200,
         uklid: (h) => h * 50,
-        bonus: 1000,
-        jine: 0
+        bonus: 1000
       }
 
       for (const e of recentRecords) {
-        if (e.payment === 'hotove') hotovost += Number(e.amount || 0)
-        if (e.type === 'uklid') hodnota += activityValues.uklid(e.hours || 0)
-        else if (e.type !== 'jine') hodnota += activityValues[e.type] || 0
+        if (e.payment === 'hotove') {
+          hotovost += Number(e.amount || 0)
+        }
+
+        if (e.type === 'vyplata') {
+          vyplaceno += Number(e.amount || 0)
+        } else if (e.type === 'uklid') {
+          hodnota += activityValues.uklid(e.hours || 0)
+        } else if (e.type === 'jine') {
+          hodnota += Number(e.amount || 0)
+        } else {
+          hodnota += activityValues[e.type] || 0
+        }
       }
 
       setSummary({
         hotovost,
         hodnota,
-        rozdil: hotovost - hodnota
+        vyplaceno,
+        rozdil: hotovost + vyplaceno - hodnota
       })
     }
   }
@@ -52,7 +63,15 @@ export default function UserEarningsOverview({ user }) {
 
   return (
     <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto p-6 px-8 bg-gray-800 rounded-lg shadow-lg mt-6">
-      <h3 className="text-2xl font-bold mb-6 text-white">Tvé záznamy</h3>
+      <h3 className="text-2xl font-bold mb-4 text-white">Tvé záznamy</h3>
+
+      <button
+        onClick={loadRecords}
+        className="mb-6 px-4 py-2 bg-yellow-500 text-black font-semibold rounded hover:bg-yellow-400 transition"
+      >
+        
+        🔄 Obnovit záznamy
+      </button>
 
       {summary && (
         <div className="colorful-summary">
@@ -60,6 +79,9 @@ export default function UserEarningsOverview({ user }) {
           <div className="summary-value">{summary.hotovost} Kč</div>
           <div className="summary-label" style={{ marginTop: '0.7rem' }}>💼 Hodnota práce:</div>
           <div className="summary-value">{summary.hodnota} Kč</div>
+          <div className="summary-label" style={{ marginTop: '0.7rem' }}>✅ Již vyplaceno:</div>
+          <div className="summary-value">{summary.vyplaceno} Kč</div>
+
           <div
             className={`summary-diff ${
               summary.rozdil > 0

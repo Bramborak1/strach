@@ -58,8 +58,15 @@ export default function AdminUserOverview() {
         for (const e of data) {
           if (e.payment === 'hotove') hotovost += Number(e.amount || 0)
           if (e.type === 'vyplata') vyplaceno += Number(e.amount || 0)
-          if (e.type === 'uklid') hodnota += activityValues.uklid(e.hours || 0)
-          else if (e.type !== 'jine') hodnota += activityValues[e.type] || 0
+           
+            if (e.type === 'uklid') {
+              hodnota += activityValues.uklid(e.hours || 0)
+            } else if (e.type === 'jine') {
+              hodnota += Number(e.amount || 0)
+            } else {
+              hodnota += activityValues[e.type] || 0
+            }
+            
         }
 
         setSummary({
@@ -131,8 +138,16 @@ export default function AdminUserOverview() {
       for (const e of data) {
         if (e.payment === 'hotove') hotovost += Number(e.amount || 0)
         if (e.type === 'vyplata') vyplaceno += Number(e.amount || 0)
-        if (e.type === 'uklid') hodnota += activityValues.uklid(e.hours || 0)
-        else if (e.type !== 'jine') hodnota += activityValues[e.type] || 0
+         
+        if (e.type === 'uklid') {
+            hodnota += activityValues.uklid(e.hours || 0)
+          } else if (e.type === 'jine') {
+            hodnota += Number(e.amount || 0)
+          } else {
+            hodnota += activityValues[e.type] || 0
+          }
+          
+            
       }
 
       setSummary({

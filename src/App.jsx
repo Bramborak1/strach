@@ -60,12 +60,6 @@ function App() {
           onClick={() => setActiveTab('debt')}
           className={`navbar-btn${activeTab === 'debt' ? ' active' : ''}`}
         >
-          Přehled financí
-        </button>
-        <button
-          onClick={() => setActiveTab('pin')}
-          className={`navbar-btn${activeTab === 'pin' ? ' active' : ''}`}
-        >
           Změna PINu
         </button>
         {user.name === 'Milan' && (

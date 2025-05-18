@@ -6,6 +6,7 @@ export default function EarningsForm({ user }) {
   const [hours, setHours] = useState(0)
   const [payment, setPayment] = useState('kartou')
   const [amount, setAmount] = useState('')
+  const [customAmount, setCustomAmount] = useState('') // pro "jine"
   const [note, setNote] = useState('')
   const [message, setMessage] = useState('')
   const [isError, setIsError] = useState(false)
@@ -15,6 +16,16 @@ export default function EarningsForm({ user }) {
     setMessage('')
     setIsError(false)
 
+    // Výpočet finální částky
+    let finalAmount = null
+    if (type === 'uklid') {
+      finalAmount = hours * 50
+    } else if (type === 'jine') {
+      finalAmount = customAmount !== '' ? Number(customAmount) : null
+    } else if ((type === 'hra' || type === 'lastminute') && payment === 'hotove') {
+      finalAmount = amount !== '' ? Number(amount) : null
+    }
+
     try {
       const { error } = await supabase
         .from('earnings')
@@ -23,8 +34,8 @@ export default function EarningsForm({ user }) {
             user_name: user.name,
             type,
             hours: type === 'uklid' ? hours : null,
-            payment: type === 'hra' || type === 'lastminute' ? payment : null,
-            amount: amount !== '' ? amount : null,
+            payment: (type === 'hra' || type === 'lastminute') ? payment : null,
+            amount: finalAmount,
             note: note !== '' ? note : null,
             deleted: false
           }
@@ -37,6 +48,7 @@ export default function EarningsForm({ user }) {
       setHours(0)
       setPayment('kartou')
       setAmount('')
+      setCustomAmount('')
       setNote('')
     } catch (error) {
       console.error('Chyba při ukládání:', error)
@@ -51,10 +63,7 @@ export default function EarningsForm({ user }) {
 
       <form onSubmit={handleSubmit}>
         <label>Typ činnosti:</label>
-        <select
-          value={type}
-          onChange={(e) => setType(e.target.value)}
-        >
+        <select value={type} onChange={(e) => setType(e.target.value)}>
           <option value="hra">Odehraná hra (600 Kč)</option>
           <option value="lastminute">Last minute hra (700 Kč)</option>
           <option value="noshow">No-show (200 Kč)</option>
@@ -76,15 +85,11 @@ export default function EarningsForm({ user }) {
         {(type === 'hra' || type === 'lastminute') && (
           <>
             <label>Platba:</label>
-            <select
-              value={payment}
-              onChange={(e) => setPayment(e.target.value)}
-            >
+            <select value={payment} onChange={(e) => setPayment(e.target.value)}>
               <option value="kartou">Kartou</option>
               <option value="hotove">Hotově</option>
               <option value="voucher">Voucher</option>
               <option value="qr">QR</option>
-              
             </select>
           </>
         )}
@@ -103,23 +108,35 @@ export default function EarningsForm({ user }) {
 
         {type === 'jine' && (
           <>
-            <label>Popis úkolu a domluvené odměny:</label>
+            <label>Popis úkolu:</label>
             <input
               type="text"
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              placeholder="Např. pomoc s akcí – 500 Kč"
+              placeholder="Např. pomoc s akcí"
+            />
+
+            <label>Odměna v Kč:</label>
+            <input
+              type="number"
+              value={customAmount}
+              onChange={(e) => setCustomAmount(e.target.value)}
+              placeholder="Např. 500"
             />
           </>
         )}
 
-        <label>Poznámka:</label>
-        <input
-          type="text"
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
-          placeholder="Např. poznámka k výdělku"
-        />
+        {type !== 'jine' && (
+          <>
+            <label>Poznámka:</label>
+            <input
+              type="text"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="Např. poznámka k výdělku"
+            />
+          </>
+        )}
 
         <button type="submit">Uložit</button>
 
