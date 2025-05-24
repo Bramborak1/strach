@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import LoginNamePin from './LoginNamePin'
-import EarningsForm from './EarningsForm'
 import ChangePin from './ChangePin'
 import AdminResetPin from './AdminResetPin'
 import DebtStatus from './DebtStatus'
@@ -57,8 +56,8 @@ function App() {
           Zadat výdělek
         </button>
         <button
-          onClick={() => setActiveTab('debt')}
-          className={`navbar-btn${activeTab === 'debt' ? ' active' : ''}`}
+          onClick={() => setActiveTab('pin')}
+          className={`navbar-btn${activeTab === 'pin' ? ' active' : ''}`}
         >
           Změna PINu
         </button>
@@ -81,20 +80,18 @@ function App() {
       </nav>
 
       {/* Obsah */}
-      <main className="flex-grow flex items-center justify-center px-4 py-6">
-        <div className="bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-4xl">
-          {activeTab === 'earnings' && (
-            <>
-              <EarningsForm user={user} />
-              <UserEarningsOverview user={user} />
-            </>
-          )}
-          {activeTab === 'debt' && <DebtStatus user={user} />}
-          {activeTab === 'pin' && <ChangePin user={user} />}
-          {activeTab === 'adminReset' && user.name === 'Milan' && <AdminResetPin />}
-          {activeTab === 'adminOverview' && user.name === 'Milan' && <AdminUserOverview />}
-        </div>
-      </main>
+    <main className="flex-grow flex items-center justify-center px-4 py-6">
+  <div className="bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-4xl">
+    {activeTab === 'earnings' && (
+      <UserEarningsOverview user={user} />
+    )}
+    {activeTab === 'debt' && <DebtStatus user={user} />}
+    {activeTab === 'pin' && <ChangePin user={user} />}
+    {activeTab === 'adminReset' && user.name === 'Milan' && <AdminResetPin />}
+    {activeTab === 'adminOverview' && user.name === 'Milan' && <AdminUserOverview />}
+  </div>
+</main>
+
     </div>
   )
 }

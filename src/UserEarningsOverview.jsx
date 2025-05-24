@@ -14,11 +14,7 @@ export default function UserEarningsOverview({ user }) {
       .order('created_at', { ascending: false })
 
     if (!error) {
-      const fourteenDaysAgo = new Date()
-      fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14)
-      const recentRecords = data.filter(r => new Date(r.created_at) >= fourteenDaysAgo)
-
-      setRecords(recentRecords)
+      setRecords(data)
 
       let hotovost = 0
       let hodnota = 0
@@ -32,7 +28,7 @@ export default function UserEarningsOverview({ user }) {
         bonus: 1000
       }
 
-      for (const e of recentRecords) {
+      for (const e of data) {
         if (e.payment === 'hotove') {
           hotovost += Number(e.amount || 0)
         }
@@ -69,7 +65,6 @@ export default function UserEarningsOverview({ user }) {
         onClick={loadRecords}
         className="mb-6 px-4 py-2 bg-yellow-500 text-black font-semibold rounded hover:bg-yellow-400 transition"
       >
-        
         🔄 Obnovit záznamy
       </button>
 
@@ -102,7 +97,7 @@ export default function UserEarningsOverview({ user }) {
       )}
 
       <div className="w-full">
-        <h4 className="text-xl font-semibold mb-4 text-white">Historie záznamů (posledních 14 dní)</h4>
+        <h4 className="text-xl font-semibold mb-4 text-white">Historie všech záznamů</h4>
         <ul>
           {records.map((r) => (
             <li
