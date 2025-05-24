@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { supabase } from './supabaseClient'
+import EarningsForm from './EarningsForm' // <- přidán import formuláře
 
 export default function UserEarningsOverview({ user }) {
   const [records, setRecords] = useState([])
@@ -60,6 +61,9 @@ export default function UserEarningsOverview({ user }) {
   return (
     <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto p-6 px-8 bg-gray-800 rounded-lg shadow-lg mt-6">
       <h3 className="text-2xl font-bold mb-4 text-white">Tvé záznamy</h3>
+
+      {/* 🟨 Formulář pro zadání výdělku */}
+      <EarningsForm user={user} onSubmitted={loadRecords} />
 
       <button
         onClick={loadRecords}
