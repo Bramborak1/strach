@@ -80,8 +80,8 @@ export default function AdminUserOverview() {
     setPayoutMessage('')
 
     const amount = Number(payoutAmount)
-    if (!amount || amount <= 0) {
-      setPayoutMessage('Zadej platnou částku.')
+    if (isNaN(amount) || amount === 0) {
+      setPayoutMessage('Zadej částku (kladnou nebo zápornou).')
       return
     }
 
@@ -164,26 +164,29 @@ export default function AdminUserOverview() {
           </select>
         </form>
         {selected && summary && (
-          <div style={{marginTop: '1.5rem'}}>
+          <div style={{ marginTop: '1.5rem' }}>
             <label>Souhrn:</label>
-            <div style={{marginBottom: '1rem'}}>
-              <div style={{color:'#ffd700'}}>💵 Obdržená hotovost: <b>{summary.hotovost} Kč</b></div>
-              <div style={{color:'#ffd700'}}>💼 Hodnota práce: <b>{summary.hodnota} Kč</b></div>
-              <div style={{color:'#ffd700'}}>✅ Již vyplaceno: <b>{summary.vyplaceno} Kč</b></div>
-              <div style={{color:'#00e676', fontWeight:'bold'}}>Zbývá vyplatit: {summary.hodnota - summary.hotovost - summary.vyplaceno} Kč</div>
+            <div style={{ marginBottom: '1rem' }}>
+              <div style={{ color: '#ffd700' }}>💵 Obdržená hotovost: <b>{summary.hotovost} Kč</b></div>
+              <div style={{ color: '#ffd700' }}>💼 Hodnota práce: <b>{summary.hodnota} Kč</b></div>
+              <div style={{ color: '#ffd700' }}>✅ Již vyplaceno: <b>{summary.vyplaceno} Kč</b></div>
+              <div style={{ color: '#00e676', fontWeight: 'bold' }}>Zbývá vyplatit: {summary.hodnota - summary.hotovost - summary.vyplaceno} Kč</div>
               {summary.hodnota - summary.hotovost - summary.vyplaceno > 4000 && (
-                <div style={{color:'#ff1744', fontWeight:'bold'}}>🔔 POZOR: Dlužíte brigádníkovi více než 4000 Kč!</div>
+                <div style={{ color: '#ff1744', fontWeight: 'bold' }}>🔔 POZOR: Dlužíte brigádníkovi více než 4000 Kč!</div>
               )}
             </div>
             <form onSubmit={handlePayoutSubmit}>
               <label>Zadat výplatu:</label>
               <input
                 type="number"
-                placeholder="Částka k výplatě"
+                placeholder="Částka k výplatě (kladná i záporná)"
                 value={payoutAmount}
                 onChange={(e) => setPayoutAmount(e.target.value)}
                 className="mb-2"
               />
+              <p className="text-sm text-gray-400 mb-2">
+                Můžeš zadat i zápornou částku, pokud brigádník odevzdává hotovost zpět firmě.
+              </p>
               <input
                 type="text"
                 placeholder="Poznámka (nepovinné)"
@@ -191,7 +194,7 @@ export default function AdminUserOverview() {
                 onChange={(e) => setPayoutNote(e.target.value)}
                 className="mb-2"
               />
-              <button type="submit" className="btn">Vyplatit</button>
+              <button type="submit" className="btn">Zadat výplatu</button>
               {payoutMessage && <p className="text-sm mt-1">{payoutMessage}</p>}
             </form>
           </div>

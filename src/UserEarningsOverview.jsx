@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { supabase } from './supabaseClient'
-import EarningsForm from './EarningsForm' // <- přidán import formuláře
+import EarningsForm from './EarningsForm'
 
 export default function UserEarningsOverview({ user }) {
   const [records, setRecords] = useState([])
@@ -62,7 +62,6 @@ export default function UserEarningsOverview({ user }) {
     <div className="flex flex-col items-center justify-center w-full max-w-md mx-auto p-6 px-8 bg-gray-800 rounded-lg shadow-lg mt-6">
       <h3 className="text-2xl font-bold mb-4 text-white">Tvé záznamy</h3>
 
-      {/* 🟨 Formulář pro zadání výdělku */}
       <EarningsForm user={user} onSubmitted={loadRecords} />
 
       <button
@@ -84,15 +83,15 @@ export default function UserEarningsOverview({ user }) {
           <div
             className={`summary-diff ${
               summary.rozdil > 0
-                ? 'positive'
-                : summary.rozdil < 0
                 ? 'negative'
+                : summary.rozdil < 0
+                ? 'positive'
                 : 'zero'
             }`}
             style={{ marginTop: '1.1rem' }}
           >
             {summary.rozdil > 0
-              ? `Máš vrátit: ${summary.rozdil} Kč`
+              ? `🧾 Je třeba odevzdat: ${summary.rozdil} Kč`
               : summary.rozdil < 0
               ? `Firma ti dluží: ${Math.abs(summary.rozdil)} Kč`
               : 'Vše vyrovnáno'}
@@ -125,7 +124,13 @@ export default function UserEarningsOverview({ user }) {
               <span className="record-date">{new Date(r.created_at).toLocaleString()}</span>
               <span className="record-type">{r.type}</span>
               <span className="record-note">{r.note || 'bez poznámky'}</span>
-              <span className="record-amount">{r.amount ?? 'žádná částka'} Kč</span>
+              <span
+                className={`record-amount ${
+                  Number(r.amount) < 0 ? 'text-red-400 font-bold' : ''
+                }`}
+              >
+                {r.amount ?? 'žádná částka'} Kč
+              </span>
               <span className="record-payment">({r.payment || 'bez platby'})</span>
             </li>
           ))}
